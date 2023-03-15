@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/habit_tile.dart';
 
-import '../components/add_new_habit.dart';
+import '../components/my_alertbox.dart';
 import '../components/my_fab.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,10 +32,11 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AddNewHabit(
+        return MyAlertBox(
           controller: _newHabitNameController,
           onSave: saveNewHabit,
-          onCancel: cancelNewHabit,
+          onCancel: cancelDialogBox,
+          hintText: 'Enter Here',
         );
       },
     );
@@ -53,9 +54,40 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
-  void cancelNewHabit() {
+  void cancelDialogBox() {
     _newHabitNameController.clear();
     Navigator.of(context).pop();
+  }
+
+  //open Habit the selected Habit
+  void openHabitSettings(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MyAlertBox(
+          controller: _newHabitNameController,
+          onSave: () => saveExistingHabit(index),
+          onCancel: cancelDialogBox,
+          hintText: todaysHabitList[index][0],
+        );
+      },
+    );
+  }
+
+  //save existing habit
+  void saveExistingHabit(int index) {
+    setState(() {
+      todaysHabitList[index][0] = _newHabitNameController.text;
+    });
+    _newHabitNameController.clear();
+    Navigator.pop(context);
+  }
+
+  //deleting a habit
+  void deleteHabit(int index) {
+    setState(() {
+      todaysHabitList.removeAt(index);
+    });
   }
 
   @override
@@ -72,6 +104,8 @@ class _HomePageState extends State<HomePage> {
             habitName: todaysHabitList[index][0],
             habitCompleted: todaysHabitList[index][1],
             onChanged: (value) => checkBoxTapped(value, index),
+            settingsTapped: (context) => openHabitSettings(index),
+            deleteTapped: (context) => deleteHabit(index),
           );
         },
       ),

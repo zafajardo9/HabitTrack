@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/colors/colors.dart';
 
-class AddNewHabit extends StatelessWidget {
+class MyAlertBox extends StatelessWidget {
   final controller;
   final VoidCallback onSave;
   final VoidCallback onCancel;
+  final String hintText;
 
-  const AddNewHabit({
+  const MyAlertBox({
     super.key,
     required this.controller,
+    required this.hintText,
     required this.onSave,
     required this.onCancel,
   });
@@ -18,7 +20,10 @@ class AddNewHabit extends StatelessWidget {
     return AlertDialog(
       content: TextField(
         controller: controller,
-        decoration: const InputDecoration(enabledBorder: OutlineInputBorder()),
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(),
+          hintText: hintText,
+        ),
       ),
       actions: [
         MaterialButton(
